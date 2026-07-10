@@ -26,21 +26,21 @@ jobs:
             mkdir -p ~/.ssh
             echo "${{secrets.SSH_PRIVATE_KEY_101}}" > ~/.ssh/myKeys
             chmod 600 ~/.ssh/myKeys
-            for prod_ip in ${{secrets.EC2_IPS_PROD_101}}; do
-            ssh-keyscan -H $prod_ip >> ~/.ssh/known_hosts
+            for prodIP in ${{secrets.EC2_IPS_PROD_101}}; do
+            ssh-keyscan -H $prodIP >> ~/.ssh/known_hosts
             done
       
       - name: install nginx on ec2
         run: |
-            for prod_ip in ${{secrets.EC2_IPS_PROD_101}}; do
-            ssh -i ~/.ssh/myKeys ubuntu@$prod_ip} "sudo apt update && sudo apt install nginx -y"
+            for prodIP in ${{secrets.EC2_IPS_PROD_101}}; do
+            ssh -i ~/.ssh/myKeys ubuntu@$prodIP "sudo apt update && sudo apt install nginx -y"
             done
 
       - name: deploy website
         run: |
-            for prod_ip in ${{secrets.EC2_IPS_PROD_101}}; do
-            scp -i ~/.ssh/myKeys frontend/index.html ubuntu@$prod_ip:/home/ubuntu/index.html
-            ssh -i ~/.ssh/myKeys ubuntu@$prod_ip "sudo cp /home/ubuntu/index.html /var/www/html/index.html"
+            for prodIP in ${{secrets.EC2_IPS_PROD_101}}; do
+            scp -i ~/.ssh/myKeys frontend/index.html ubuntu@$prodIP:/home/ubuntu/index.html
+            ssh -i ~/.ssh/myKeys ubuntu@$prodIP "sudo cp /home/ubuntu/index.html /var/www/html/index.html"
             done
 
       - name: Post a message in channel (25-09-bt)
