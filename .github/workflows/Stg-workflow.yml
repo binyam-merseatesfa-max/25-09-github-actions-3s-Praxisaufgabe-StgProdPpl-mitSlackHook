@@ -16,7 +16,7 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL_101_BT }}
           webhook-type: incoming-webhook
           payload: |
-            text: "...🚀🚀 Staging Pipeline started by ${{github.actor}}. Pipeline : ${{github.workflow}} ..🚀"
+            text: "... Staging Pipeline started by ${{github.actor}}. Pipeline : ${{github.workflow}} ..🚀"
 
       - name: ssh setup
         run: |
