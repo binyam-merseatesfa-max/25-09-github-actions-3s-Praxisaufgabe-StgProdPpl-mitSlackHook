@@ -1,0 +1,62 @@
+name: PROD Workflow bt
+on: 
+  push:
+    tags:
+        - 'v*.0.0'
+
+jobs:
+  PROD-Deploy:
+    runs-on: ubuntu-latest
+    name: Deploy Website on Production
+    steps:
+
+      - name: Post a message in channel (25-09-bt)
+        uses: slackapi/slack-github-action@v3.0.3
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL_101_BT }}
+          webhook-type: incoming-webhook
+          payload: |
+            text: "... Prod deploy Pipeline started by ${{github.actor}}. Pipeline : ${{github.workflow}} ..🚀"
+
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: ssh setup
+        run: |
+            mkdir -p ~/.ssh
+            echo "${{secrets.SSH_PRIVATE_KEY_101}}" > ~/.ssh/myKeys
+            chmod 600 ~/.ssh/myKeys
+            for prod_ip in ${{secrets.EC2_IPS_PROD_101}}; do
+            ssh-keyscan -H $prod_ip >> ~/.ssh/known_hosts
+            done
+      
+      - name: install nginx on ec2
+        run: |
+            for prod_ip in ${{secrets.EC2_IPS_PROD_101}}; do
+            ssh -i ~/.ssh/myKeys ubuntu@$prod_ip} "sudo apt update && sudo apt install nginx -y"
+            done
+
+      - name: deploy website
+        run: |
+            for prod_ip in ${{secrets.EC2_IPS_PROD_101}}; do
+            scp -i ~/.ssh/myKeys frontend/index.html ubuntu@$prod_ip:/home/ubuntu/index.html
+            ssh -i ~/.ssh/myKeys ubuntu@$prod_ip "sudo cp /home/ubuntu/index.html /var/www/html/index.html"
+            done
+
+      - name: Post a message in channel (25-09-bt)
+        if: ${{ success()}}
+        uses: slackapi/slack-github-action@v3.0.3
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL_101_BT }}
+          webhook-type: incoming-webhook
+          payload: |
+            text: "✅ PROD Deploy Pipeline successfull done! run by ${{github.actor}}. Pipeline : ${{github.workflow}}"  
+            
+      - name: Post a message in channel (25-09-bt)
+        if: ${{ failure()}}
+        uses: slackapi/slack-github-action@v3.0.3
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL_101_BT }}
+          webhook-type: incoming-webhook
+          payload: |
+            text: "❌ PROD Deploy Pipeline failed. Please review & FIX ASAP !!!."                  
