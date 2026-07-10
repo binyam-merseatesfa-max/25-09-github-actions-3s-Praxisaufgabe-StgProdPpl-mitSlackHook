@@ -31,7 +31,7 @@ jobs:
 
       - name: deploy website
         run: |
-            scp -i ~/.ssh/myKeys Frontend/index.html ubuntu@${{secrets.EC2_IP_STG_101}}:/home/ubuntu/index.html
+            scp -i ~/.ssh/myKeys frontend/index.html ubuntu@${{secrets.EC2_IP_STG_101}}:/home/ubuntu/index.html
             ssh -i ~/.ssh/myKeys ubuntu@${{secrets.EC2_IP_STG_101}} "sudo cp /home/ubuntu/index.html /var/www/html/index.html"
 
       - name: Post a message in channel (25-09-bt)
