@@ -3,9 +3,9 @@ on: push
 jobs:
   stg:
     runs-on: ubuntu-latest
-    name: Testing 101 just Hi
+    name: Stage Website
     steps:
-      - name: Hi
+      - name: Hi test
         run: |
           echo "Hi 102 test call"
           date
@@ -17,6 +17,9 @@ jobs:
           webhook-type: incoming-webhook
           payload: |
             text: "... Staging Pipeline started by ${{github.actor}}. Pipeline : ${{github.workflow}} ..🚀"
+
+      - name: Checkout
+        uses: actions/checkout@v7
 
       - name: ssh setup
         run: |
