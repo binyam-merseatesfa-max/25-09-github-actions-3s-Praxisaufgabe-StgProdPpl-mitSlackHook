@@ -1,7 +1,7 @@
-name: Staging Workflow b
+name: Staging Workflow bt
 on: push
 jobs:
-  test101-job:
+  stg:
     runs-on: ubuntu-latest
     name: Testing 101 just Hi
     steps:
@@ -9,3 +9,11 @@ jobs:
         run: |
           echo "Hi 102 test call"
           date
+
+      - name: Post a message in a channel
+        uses: slackapi/slack-github-action@v3.0.3
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL_101_BT }}
+          webhook-type: incoming-webhook
+          payload: |
+                  text: "🚀 Staging Pipeline started by ${{github.actor}}. Pipeline : ${{github.workflow}}"  
