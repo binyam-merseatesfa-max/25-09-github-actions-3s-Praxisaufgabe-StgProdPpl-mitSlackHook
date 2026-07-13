@@ -28,7 +28,7 @@ jobs:
       - name: copy and deploy website container
         run: |
             scp -i ~/.ssh/myKeys -r frontend ubuntu@${{secrets.EC2_IP_STG_101}}:/home/ubuntu/
-            ssh -i ~/.ssh/myKeys ubuntu@${{s -recrets.EC2_IP}} "docker build -t bt-frontend-image /home/ubuntu/frontend"      
-            ssh -i ~/.ssh/myKeys ubuntu@${{s -recrets.EC2_IP}} "docker stop bt-frontend-container || true"     
-            ssh -i ~/.ssh/myKeys ubuntu@${{s -recrets.EC2_IP}} "docker rm bt-frontend-container || true"  
-            ssh -i ~/.ssh/myKeys ubuntu@${{s -recrets.EC2_IP}} "docker run -d -p 80:80 --name bt-frontend-container bt-frontend-image"   
+            ssh -i ~/.ssh/myKeys ubuntu@${{secrets.EC2_IP}} "docker build -t bt-frontend-image /home/ubuntu/frontend"      
+            ssh -i ~/.ssh/myKeys ubuntu@${{secrets.EC2_IP}} "docker stop bt-frontend-container || true"     
+            ssh -i ~/.ssh/myKeys ubuntu@${{secrets.EC2_IP}} "docker rm bt-frontend-container || true"  
+            ssh -i ~/.ssh/myKeys ubuntu@${{secrets.EC2_IP}} "docker run -d -p 80:80 --name bt-frontend-container bt-frontend-image"   
