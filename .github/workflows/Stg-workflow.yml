@@ -1,5 +1,5 @@
 name: Staging Workflow bt
-on: push
+on: workflow_dispatch
 jobs:
   stg:
     runs-on: ubuntu-latest
