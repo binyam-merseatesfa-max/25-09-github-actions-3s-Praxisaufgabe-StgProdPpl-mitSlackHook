@@ -9,3 +9,18 @@ jobs:
         run: |
           echo "Hi 201 test call"
           date
+
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: ssh setup
+        run: |
+            mkdir -p ~/.ssh
+            echo "${{secrets.SSH_PRIVATE_KEY_101}}" > ~/.ssh/myKeys
+            chmod 600 ~/.ssh/myKeys
+            ssh-keyscan -H ${{secrets.EC2_IP_STG_101}} >> ~/.ssh/known_hosts
+              
+      - name: install docker on ec2
+        run: |
+            ssh -i ~/.ssh/myKeys ubuntu@${{secrets.EC2_IP_STG_101}} "sudo apt update && sudo apt install docker.io -y"
+            ssh -i ~/.ssh/myKeys ubuntu@${{secrets.EC2_IP_STG_101}} "sudo usermod -aG docker ubuntu"
