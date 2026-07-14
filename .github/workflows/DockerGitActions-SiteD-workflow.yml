@@ -1,5 +1,5 @@
 name: Docker plus GitHub Actions website deploy
-on: push
+on: workflow_dispatch
 jobs:
   dockerPlusAction-website-deploy:
     runs-on: ubuntu-latest
